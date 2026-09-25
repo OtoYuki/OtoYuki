@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" width="100%" height="auto">
+  <defs>
+    <pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="0.75" fill="#5A6042" opacity="0.35" />
+    </pattern>
+    <style>
+      .mono { font-family: ui-monospace, SFMono-Regular, "Geist Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+      .title { font-weight: 700; font-size: 11px; letter-spacing: 1.5px; fill: #FBFFE1; }
+      .meta { font-size: 10px; letter-spacing: 1px; fill: #8A9A86; }
+      .section-hdr { font-weight: 600; font-size: 10px; letter-spacing: 1.2px; fill: #D8A664; }
+      .lbl { font-size: 9.5px; letter-spacing: 0.8px; fill: #8A9A86; }
+      .val { font-size: 9.5px; font-weight: 500; letter-spacing: 0.5px; fill: #FBFFE1; }
+      .status { font-size: 9px; letter-spacing: 1px; fill: #99920B; font-weight: 600; }
+    </style>
+  </defs>
+
+  <!-- Ground -->
+  <rect width="900" height="240" fill="#141C10" rx="6" />
+  <rect width="900" height="240" fill="url(#grid)" rx="6" />
+  <rect x="0.5" y="0.5" width="899" height="239" fill="none" stroke="#5A6042" stroke-width="1" stroke-opacity="0.6" rx="6" />
+
+  <!-- Corner Register Marks (+) -->
+  <path d="M 12 16 L 20 16 M 16 12 L 16 20" stroke="#8A9A86" stroke-width="1" opacity="0.7" />
+  <path d="M 880 16 L 888 16 M 884 12 L 884 20" stroke="#8A9A86" stroke-width="1" opacity="0.7" />
+  <path d="M 12 224 L 20 224 M 16 220 L 16 228" stroke="#8A9A86" stroke-width="1" opacity="0.7" />
+  <path d="M 880 224 L 888 224 M 884 220 L 884 228" stroke="#8A9A86" stroke-width="1" opacity="0.7" />
+
+  <!-- Header Strip -->
+  <circle cx="34" cy="25" r="3.5" fill="#99920B">
+    <animate attributeName="opacity" values="1;0.4;1" dur="2.4s" repeatCount="indefinite" />
+  </circle>
+  <text x="48" y="29" class="mono title">SYS // TELEMETRY &amp; OPERATING MATRIX [ACTIVE]</text>
+  <text x="866" y="29" text-anchor="end" class="mono meta">ID: S1RE-01 · TAILNET: DENVER · 144Hz</text>
+
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#5A6042" stroke-width="1" stroke-opacity="0.4" stroke-dasharray="3 3" />
+
+  <!-- Column 1: Core System -->
+  <g transform="translate(30, 62)">
+    <text x="0" y="0" class="mono section-hdr">[01 // ENVIRONMENT]</text>
+    
+    <text x="0" y="22" class="mono lbl">KERNEL</text>
+    <text x="75" y="22" class="mono val">: Arch Linux x86_64</text>
+    
+    <text x="0" y="42" class="mono lbl">WM / COMP</text>
+    <text x="75" y="42" class="mono val">: Hyprland (Lua Config)</text>
+    
+    <text x="0" y="62" class="mono lbl">TERM / THEME</text>
+    <text x="75" y="62" class="mono val">: Kitty [Sanctuary 6-Tone]</text>
+    
+    <text x="0" y="82" class="mono lbl">DOTFILES</text>
+    <text x="75" y="82" class="mono val">: Bare Git Repo (~/.cfg)</text>
+    
+    <text x="0" y="102" class="mono lbl">HARDWARE</text>
+    <text x="75" y="102" class="mono val">: Omen 16 (Discrete MUX)</text>
+  </g>
+
+  <!-- Vertical Divider 1 -->
+  <line x1="305" y1="52" x2="305" y2="185" stroke="#5A6042" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="2 2" />
+
+  <!-- Column 2: Toolchains & Runtimes -->
+  <g transform="translate(325, 62)">
+    <text x="0" y="0" class="mono section-hdr">[02 // RUNTIMES &amp; SYSTEMS]</text>
+    
+    <text x="0" y="22" class="mono lbl">PRIMARY</text>
+    <text x="75" y="22" class="mono val">: Rust (rustc / cargo / clippy)</text>
+    
+    <text x="0" y="42" class="mono lbl">DESKTOP</text>
+    <text x="75" y="42" class="mono val">: Tauri 2.0 (Rust + TS)</text>
+    
+    <text x="0" y="62" class="mono lbl">MANAGERS</text>
+    <text x="75" y="62" class="mono val">: mise [node v26, uv, rust]</text>
+    
+    <text x="0" y="82" class="mono lbl">CONTAINER</text>
+    <text x="75" y="82" class="mono val">: Podman (Rootless Engine)</text>
+    
+    <text x="0" y="102" class="mono lbl">CLOUD INFRA</text>
+    <text x="75" y="102" class="mono val">: Railway · PostgreSQL · S3</text>
+  </g>
+
+  <!-- Vertical Divider 2 -->
+  <line x1="600" y1="52" x2="600" y2="185" stroke="#5A6042" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="2 2" />
+
+  <!-- Column 3: Informatics & Scientific Compute -->
+  <g transform="translate(620, 62)">
+    <text x="0" y="0" class="mono section-hdr">[03 // BIO &amp; INFORMATICS]</text>
+    
+    <text x="0" y="22" class="mono lbl">STRUCT-BIO</text>
+    <text x="80" y="22" class="mono val">: AlphaFold2 [Proteus Local]</text>
+    
+    <text x="0" y="42" class="mono lbl">PIPELINES</text>
+    <text x="80" y="42" class="mono val">: Nextflow · nf-core estates</text>
+    
+    <text x="0" y="62" class="mono lbl">ARRAY DATA</text>
+    <text x="80" y="62" class="mono val">: AnnData / h5ad (Single-Cell)</text>
+    
+    <text x="0" y="82" class="mono lbl">FFI INTEROP</text>
+    <text x="80" y="82" class="mono val">: PyO3 (C-ABI Acceleration)</text>
+    
+    <text x="0" y="102" class="mono lbl">SCIENTIFIC</text>
+    <text x="80" y="102" class="mono val">: Astro &amp; Bio Numeric Stacks</text>
+  </g>
+
+  <!-- Footer Status Bar -->
+  <line x1="20" y1="198" x2="880" y2="198" stroke="#5A6042" stroke-width="1" stroke-opacity="0.4" />
+  
+  <rect x="30" y="208" width="6" height="6" fill="#D8A664" />
+  <text x="44" y="215" class="mono status">STATION: OPERATIONAL // ALL LOCAL CORES PASSING CHECKS</text>
+  <text x="866" y="215" text-anchor="end" class="mono meta">COORD: 27.7172° N, 85.3240° E [KATHMANDU]</text>
+</svg>
