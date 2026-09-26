@@ -1,8 +1,8 @@
-name: upstream
+name: profile
 
 on:
   schedule:
-    - cron: "17 3 * * *"
+    - cron: "5 18 * * *" # 23:50 in Kathmandu, after the day's work is in
   workflow_dispatch:
 
 permissions:
@@ -13,12 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - run: python3 scripts/deck.py OtoYuki
+        env:
+          GH_TOKEN: ${{ github.token }}
       - run: python3 scripts/upstream.py OtoYuki
         env:
           GH_TOKEN: ${{ github.token }}
       - run: |
-          git diff --quiet README.md && exit 0
+          git diff --quiet -- README.md assets/deck.svg && exit 0
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -am "chore: refresh upstream contributions"
+          git commit -m "chore: refresh deck and upstream" -- README.md assets/deck.svg
           git push

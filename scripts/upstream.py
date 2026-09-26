@@ -1,9 +1,10 @@
-"""Rewrite the UPSTREAM block in README.md with the issues and pull requests
-USER opened on public repositories it does not own, newest first.
+"""Rewrite the UPSTREAM block in README.md (inside a <pre>) with the issues and
+pull requests USER opened on public repositories it does not own, newest first.
 
     GH_TOKEN=... python3 scripts/upstream.py OtoYuki
 """
 
+import html
 import json
 import re
 import subprocess
@@ -23,34 +24,32 @@ def search(user):
     return json.loads(out)["items"]
 
 
-def short(title, limit=110):
-    title = title.split("; ")[0]
+def short(title, limit=76):
+    title = title.split("; ")[0].replace("`", "")
     if len(title) > limit:
-        title = title[: limit - 1].rstrip() + "…"
-    if title.count("`") % 2:
-        title += "`"
-    return title
+        title = title[: limit - 1].rsplit(" ", 1)[0].rstrip(" ,:;") + "…"
+    return html.escape(title)
 
 
 def status(item):
     if "pull_request" in item:
-        if item["pull_request"].get("merged_at"):
-            return "pull request · merged"
-        return f"pull request · {item['state']}"
+        return "pr · merged" if item["pull_request"].get("merged_at") else f"pr · {item['state']}"
     return f"issue · {item['state']}"
 
 
 def main(user):
     readme = Path(__file__).resolve().parent.parent / "README.md"
     text = readme.read_text()
+    items = search(user)
+    refs = [f"{i['repository_url'].removeprefix('https://api.github.com/repos/')}#{i['number']}" for i in items]
+    pad = max((len(r) for r in refs), default=0) + 2
     lines = []
-    for item in search(user):
-        repo = item["repository_url"].removeprefix("https://api.github.com/repos/")
+    for item, ref in zip(items, refs):
         lines.append(
-            f"- [{repo}#{item['number']}]({item['html_url']}): {short(item['title'])} "
-            f"<sub>{status(item)} · {item['created_at'][:10]}</sub>"
+            f'<a href="{item["html_url"]}">{ref}</a>{" " * (pad - len(ref))}'
+            f"{status(item):<14}{item['created_at'][:10]}\n  {short(item['title'])}"
         )
-    block = "\n".join(lines) or "- Nothing public yet."
+    block = "\n".join(lines) or "nothing public yet"
     new = re.sub(
         re.escape(START) + r".*?" + re.escape(END),
         lambda _: f"{START}\n{block}\n{END}",
