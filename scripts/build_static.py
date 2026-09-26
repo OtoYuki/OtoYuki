@@ -1,5 +1,5 @@
-"""Build the profile's static SVGs: the whoami terminal, the nf-audit and proteus
-cards, and the contact keys. Run on a machine with the brand fonts:
+"""Build the profile's static SVGs: the nf-audit and proteus cards and the two
+contact cards. Run on a machine with the brand fonts:
 
     uv run --with fonttools --with brotli --with uharfbuzz --with numpy python scripts/build_static.py \\
         --fonts ~/dev/s1re/fonts \\
@@ -15,7 +15,7 @@ from pathlib import Path
 
 import numpy as np
 
-from brand import (COIL, CREAM, DIM, HELIX, INK, KHAKI, LIFT, OLIVE, ROOT, RULE, SAGE, STRAND, TAN,
+from brand import (COIL, CREAM, DIM, HELIX, INK, KHAKI, LIFT, ROOT, SAGE, STRAND, TAN,
                    Face, card, num)
 from rnaseq_chart import load_runs
 
@@ -33,55 +33,6 @@ class Fonts:
 
 def label(f, text, w):
     return f.mono.text(text, w - 30, 34, 12, DIM, tracking=1.2, anchor="end")
-
-
-def whoami(f):
-    W, H = 1000, 290
-    el = []
-    x = 48
-    el.append(f.mono_md.text("~/s1re.sh", x, 62, 16, OLIVE))
-    x += f.mono_md.width("~/s1re.sh ", 16)
-    el.append(f.mono_md.text("$", x, 62, 16, DIM))
-    x += f.mono_md.width("$ ", 16)
-    for i, (_, d) in enumerate(f.mono_md.glyph_paths("whoami", x, 62, 16)):
-        el.append(f'<path class="k" style="animation-delay:{0.3 + i * 0.075:.3f}s" fill="{KHAKI}" d="{d}"/>')
-    adv = f.mono_md.width("w", 16)
-    el.append(f'<rect class="c1" opacity="0" x="{num(x)}" y="47" width="{num(adv)}" height="19" fill="{TAN}"/>')
-
-    el.append(f'<g class="o" style="animation-delay:1s">{f.display.text("Sushant Hona", 45, 138, 52, CREAM, -0.6)}</g>')
-    el.append(f'<g class="o" style="animation-delay:1.2s">'
-              f'{f.mono_md.text("RUST · SYSTEMS · COMPUTATIONAL BIOLOGY", 48, 176, 13, KHAKI, tracking=2.4)}</g>')
-    loc = [f'<circle class="p" cx="53" cy="{209 - 4.5}" r="4" fill="{TAN}"/>',
-           f.mono.text("kathmandu", 68, 209, 14, CREAM)]
-    lx = 68 + f.mono.width("kathmandu   ", 14)
-    loc.append(f.mono.text("utc+5:45", lx, 209, 14, SAGE))
-    lx += f.mono.width("utc+5:45   ", 14)
-    loc.append(f.mono.text("27.72°N 85.32°E", lx, 209, 14, DIM))
-    el.append(f'<g class="o" style="animation-delay:1.35s">{"".join(loc)}</g>')
-
-    x = 48
-    tail = [f.mono_md.text("~/s1re.sh", x, 254, 16, OLIVE)]
-    x += f.mono_md.width("~/s1re.sh ", 16)
-    tail.append(f.mono_md.text("$", x, 254, 16, DIM))
-    x += f.mono_md.width("$ ", 16)
-    el.append(f'<g class="o" style="animation-delay:1.6s">{"".join(tail)}</g>')
-    el.append(f'<rect class="c2" x="{num(x)}" y="239" width="{num(adv)}" height="19" fill="{TAN}"/>')
-
-    style = (
-        "@keyframes on{from{opacity:0}to{opacity:1}}"
-        "@keyframes off{from{opacity:1}to{opacity:0}}"
-        "@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}"
-        f"@keyframes type{{from{{transform:translateX(0)}}to{{transform:translateX({num(adv * 6)}px)}}}}"
-        "@keyframes blink{50%{opacity:0}}"
-        "@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}"
-        ".k{animation:on 1ms steps(1) both}"
-        ".o{animation:rise .5s ease-out both}"
-        ".c1{animation:type .45s steps(6,end) .3s both,off 1ms steps(1) .95s both}"
-        ".c2{animation:on 1ms steps(1) 1.6s both,blink 1.1s steps(1) 1.6s infinite}"
-        ".p{animation:pulse 2.4s ease-in-out infinite}"
-    )
-    return card(W, H, "".join(el), style=style, label=label(f, "TTY/01", W),
-                title="whoami: Sushant Hona. Rust, systems, computational biology. Kathmandu, UTC+5:45.")
 
 
 def columns(x0, width, y_base, height, runs, ymax=180):
@@ -117,7 +68,7 @@ def nf_audit_card(f, table):
     el.append(f.mono.text(f"nf-core/rnaseq · {len(band)} of {len(runs)} releases", tx, 334, 13, SAGE))
     el.append(f.mono.text(f"{runs[0][1]} → {runs[-1][1]} · seqera list rates", 36, 376, 12.5, DIM))
     el.append(f.mono_md.text("repo →", 504, 376, 14, KHAKI, anchor="end"))
-    return card(W, H, "".join(el), defs=IDLE, label=label(f, "03 · RUST · MIT", W),
+    return card(W, H, "".join(el), defs=IDLE, label=label(f, "02 · RUST · MIT", W),
                 title=f"nf-audit: {lo}–{hi}% of allocated cost never used in {len(band)} of {len(runs)} nf-core/rnaseq releases")
 
 
@@ -198,23 +149,19 @@ def proteus_card(f, pdb, analysis):
     el.append(f.mono.text(f"{a['rg']:.2f} Å", rx, 364, 16.5, CREAM))
     el.append(f.mono.text("proteus analyze 1pgb.pdb", 36, 376, 12.5, DIM))
     el.append(f.mono_md.text("repo →", 504, 376, 14, KHAKI, anchor="end"))
-    return card(W, H, "".join(el), style=style, label=label(f, "04 · RUST · MIT / APACHE-2.0", W),
+    return card(W, H, "".join(el), style=style, label=label(f, "03 · RUST · MIT / APACHE-2.0", W),
                 title=(f"proteus: protein G (1PGB) backbone turning, coloured by secondary structure; helix {a['helix_pct']:.0f}%, "
                        f"strand {a['strand_pct']:.0f}%, Ramachandran {a['rama_favored_pct']:.1f}% favoured"))
 
 
-def key(f, text):
-    W, H = 220, 66
-    lw = f.mono_md.width(text, 15, 2.5)
-    body = (
-        f'<rect x="2" y="8" width="216" height="56" rx="11" fill="#0B1008"/>'
-        f'<rect x="2.5" y="2.5" width="215" height="55" rx="10.5" fill="{LIFT}" stroke="{RULE}"/>'
-        f'<rect x="16" y="5" width="188" height="1" fill="{CREAM}" opacity="0.08"/>'
-        f'<circle cx="30" cy="30" r="8" fill="{TAN}" opacity="0.14"/><circle cx="30" cy="30" r="3.5" fill="{TAN}"/>'
-        + f.mono_md.text(text, 48 + (150 - lw) / 2, 35.5, 15, CREAM, tracking=2.5)
-    )
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" '
-            f'aria-label="{text.lower()}">{body}</svg>\n')
+def contact(f, kind, value):
+    W, H = 540, 120
+    el = [
+        f.mono.text(kind, 36, 48, 12, SAGE, tracking=1.2),
+        f.mono_md.text(value, 36, 86, 20, CREAM),
+        f.mono_md.text("→", 504, 86, 22, KHAKI, anchor="end"),
+    ]
+    return card(W, H, "".join(el), title=f"{kind.lower()}: {value}")
 
 
 def main():
@@ -226,11 +173,10 @@ def main():
     args = ap.parse_args()
     f = Fonts(args.fonts)
     out = {
-        "whoami.svg": whoami(f),
         "card-nf-audit.svg": nf_audit_card(f, args.nf_audit),
         "card-proteus.svg": proteus_card(f, args.pdb, args.analysis),
-        "key-mail.svg": key(f, "MAIL"),
-        "key-linkedin.svg": key(f, "LINKEDIN"),
+        "contact-mail.svg": contact(f, "MAIL", "sushanthona04@gmail.com"),
+        "contact-linkedin.svg": contact(f, "LINKEDIN", "linkedin.com/in/sushanthona"),
     }
     for name, svg in out.items():
         (ROOT / "assets" / name).write_text(svg)

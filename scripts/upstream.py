@@ -13,11 +13,11 @@ from brand import CREAM, DIM, INK, KHAKI, OLIVE, ROOT, SAGE, TAN, Mono, card
 ROWS = 4
 
 
-def search(user):
+def search(user, n=ROWS):
     out = subprocess.run(
         ["gh", "api", "-X", "GET", "search/issues",
          "-f", f"q=author:{user} -user:{user} is:public",
-         "-f", "sort=created", "-f", "order=desc", "-f", f"per_page={ROWS}"],
+         "-f", "sort=created", "-f", "order=desc", "-f", f"per_page={n}"],
         check=True, capture_output=True, text=True,
     ).stdout
     return json.loads(out)["items"]
@@ -61,7 +61,7 @@ def main(user):
         el.append(m.text(item["created_at"][:10], 952, y, 13, DIM, anchor="end"))
         el.append(m.text(clean(m, item["title"], 88), 210, y + 24, 13, KHAKI))
     el.append(m.text("all activity →", 952, H - 26, 12, KHAKI, "medium", anchor="end"))
-    label = m.text("TTY/05", W - 30, 34, 11, DIM, tracking=1.2, anchor="end")  # before defs(): it adds glyphs
+    label = m.text("TTY/04", W - 30, 34, 11, DIM, tracking=1.2, anchor="end")  # before defs(): it adds glyphs
     svg = card(W, H, "".join(el), defs=m.defs(), label=label,
                title=f"gh upstream: the latest {len(items)} issues and pull requests on repositories I don't own")
     out = ROOT / "assets/upstream.svg"
