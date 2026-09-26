@@ -20,8 +20,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
       - run: |
-          git diff --quiet -- README.md assets/deck.svg && exit 0
+          git diff --quiet -- assets/deck.svg assets/upstream.svg && exit 0
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "chore: refresh deck and upstream" -- README.md assets/deck.svg
+          git commit -m "chore: refresh deck and upstream" -- assets/deck.svg assets/upstream.svg
           git push

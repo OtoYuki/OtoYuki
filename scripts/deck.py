@@ -11,25 +11,15 @@ import json
 import subprocess
 import sys
 from datetime import date, datetime, timedelta
-from pathlib import Path
 from zoneinfo import ZoneInfo
 
-ROOT = Path(__file__).resolve().parent.parent
+from brand import CREAM, DIM, KHAKI, OLIVE, ROOT, RULE, SAGE, TAN, Mono, card
+
 TZ = ZoneInfo("Asia/Kathmandu")
 
 # What the deck says that the calendar can't.
 NOW = "nf-audit · proteus"
 STACK = "rust · typescript · python"
-
-INK = "#141C10"
-LIFT = "#1E2718"
-RULE = "#2C3524"
-DIM = "#5A6042"
-SAGE = "#8A9A86"
-KHAKI = "#D1CF8B"
-OLIVE = "#99920B"
-TAN = "#D8A664"
-CREAM = "#FBFFE1"
 
 QUERY = """
 query($login: String!, $from: DateTime, $to: DateTime) {
@@ -84,35 +74,6 @@ def weekly_streak(login, weeks, years):
             run += 1
         first = date.fromisoformat(older[0][0]["date"])
     return run
-
-
-class Mono:
-    def __init__(self):
-        g = json.loads((ROOT / "scripts/glyphs.json").read_text())
-        self.faces = g["faces"]
-        self.advance = g["advance"]
-        self.used = {}
-
-    def width(self, text, size, tracking=0.0):
-        return len(text) * self.advance * size / 1000 + tracking * (len(text) - 1)
-
-    def text(self, text, x, y, size, fill, face="regular", tracking=0.0, anchor="start"):
-        k = size / 1000
-        x -= {"start": 0, "middle": self.width(text, size, tracking) / 2, "end": self.width(text, size, tracking)}[anchor]
-        step = self.advance + tracking / k
-        uses = []
-        for i, ch in enumerate(text):
-            if ch == " ":
-                continue
-            if ch not in self.faces[face]:
-                raise KeyError(f"no glyph for {ch!r} in {face}")
-            gid = f"{face[0]}{ord(ch):x}"
-            self.used[gid] = self.faces[face][ch]
-            uses.append(f'<use href="#{gid}" x="{round(i * step)}"/>')
-        return f'<g fill="{fill}" transform="translate({x:.1f} {y:.1f}) scale({k:g} {-k:g})">{"".join(uses)}</g>'
-
-    def defs(self):
-        return "".join(f'<path id="{gid}" d="{d}"/>' for gid, d in sorted(self.used.items()))
 
 
 def main(login):
@@ -190,15 +151,10 @@ def main(login):
         f"synced {today.isoformat()} · github contribution calendar, private contributions included",
         48, 376, 11, DIM))
 
-    alt_title = f"s1re: {streak}-week unbroken contribution streak, {year_total:,} contributions in the past year"
-    svg = (
-        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-labelledby="t">'
-        f'<title id="t">{alt_title}</title>'
-        f'<defs><pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse">'
-        f'<circle cx="2" cy="2" r="0.8" fill="{DIM}" opacity="0.35"/></pattern>'
-        f'<clipPath id="card"><rect width="{W}" height="{H}" rx="12"/></clipPath>{m.defs()}</defs>'
-        f'<g clip-path="url(#card)"><rect width="{W}" height="{H}" fill="{INK}"/>'
-        f'<rect width="{W}" height="{H}" fill="url(#grid)"/>{"".join(el)}</g></svg>\n'
+    label = m.text("TTY/02", W - 30, 34, 11, DIM, tracking=1.2, anchor="end")
+    svg = card(
+        W, H, "".join(el), defs=m.defs(), label=label,
+        title=f"s1re: {streak}-week unbroken contribution streak, {year_total:,} contributions in the past year",
     )
     out = ROOT / "assets/deck.svg"
     if not out.exists() or out.read_text() != svg:
