@@ -6,7 +6,7 @@
 <a href="https://github.com/OtoYuki/proteus"><img src="assets/card-proteus.svg" width="49%" alt="proteus: protein G (1PGB) as a cartoon ribbon drawn by proteus view, coloured by secondary structure, with its measurements." /></a>
 </div>
 
-<a href="https://github.com/search?q=author%3AOtoYuki+-user%3AOtoYuki&type=issues&s=created&o=desc"><img src="assets/upstream.svg" width="100%" alt="gh upstream: the latest issues and pull requests I opened on repositories I don't own, refreshed every 6 hours." /></a>
+<a href="https://github.com/search?q=author%3AOtoYuki+-user%3AOtoYuki&type=issues&s=created&o=desc"><img src="assets/upstream.svg" width="100%" alt="gh upstream: my latest merged pull requests, then the latest issues and pull requests I opened on repositories I don't own, refreshed every 6 hours." /></a>
 
 <div align="center">
 <a href="mailto:sushanthona04@gmail.com"><img src="assets/contact-mail.svg" width="49%" alt="mail: sushanthona04@gmail.com" /></a>

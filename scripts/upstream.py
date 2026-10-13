@@ -1,5 +1,6 @@
-"""Render assets/upstream.svg: the latest issues and pull requests USER opened on
-public repositories it does not own. Standard library only.
+"""Render assets/upstream.svg: USER's latest merged pull requests, then the latest
+issues and pull requests it opened, on public repositories it does not own.
+Standard library only.
 
     GH_TOKEN=... python3 scripts/upstream.py OtoYuki
 """
@@ -11,12 +12,13 @@ import sys
 from brand import CREAM, DIM, INK, KHAKI, OLIVE, ROOT, SAGE, TAN, Mono, card
 
 ROWS = 4
+MERGED = 2  # pinned above the latest rows, so new posts don't push merges off the card
 
 
-def search(user, n=ROWS):
+def search(user, n=ROWS, extra=""):
     out = subprocess.run(
         ["gh", "api", "-X", "GET", "search/issues",
-         "-f", f"q=author:{user} -user:{user} is:public",
+         "-f", f"q=author:{user} -user:{user} is:public{extra}",
          "-f", "sort=created", "-f", "order=desc", "-f", f"per_page={n}"],
         check=True, capture_output=True, text=True,
     ).stdout
@@ -37,7 +39,9 @@ def clean(m, text, limit):
 
 
 def main(user):
-    items = search(user)
+    merged = search(user, MERGED, " is:pr is:merged")
+    pinned = {item["id"] for item in merged}
+    items = merged + [item for item in search(user, ROWS + MERGED) if item["id"] not in pinned][:ROWS]
     m = Mono()
     W = 1000
     H = 112 + 60 * max(len(items), 1) + 28
@@ -63,7 +67,7 @@ def main(user):
     el.append(m.text("all activity →", 952, H - 26, 12, KHAKI, "medium", anchor="end"))
     label = m.text("TTY/04", W - 30, 34, 11, DIM, tracking=1.2, anchor="end")  # before defs(): it adds glyphs
     svg = card(W, H, "".join(el), defs=m.defs(), label=label,
-               title=f"gh upstream: the latest {len(items)} issues and pull requests on repositories I don't own")
+               title=f"gh upstream: the latest {len(merged)} merged pull requests, then the latest issues and pull requests on repositories I don't own")
     out = ROOT / "assets/upstream.svg"
     if not out.exists() or out.read_text() != svg:
         out.write_text(svg)
