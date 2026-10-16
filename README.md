@@ -1,5 +1,5 @@
 <div align="center">
-<img src="assets/banner.png" width="100%" alt="~/s1re.sh $ whoami: Sushant Hona. Systems engineering · Informatics." />
+<a href="https://s1re.tech/"><img src="assets/banner.png" width="100%" alt="~/s1re.sh $ whoami: Sushant Hona. Systems engineering · Informatics." /></a>
 <p><samp>rust · nextflow · computational biology · kathmandu, utc+5:45</samp></p>
 <img src="assets/deck.svg" width="100%" alt="Shipping log, refreshed every 6 hours: now nf-audit and proteus; stack rust, typescript, python; the latest release and the latest upstream issue or pull request; recent days, weeks or months per repository with releases as filled dots and upstream work as rings; a ladder of the same span; and releases this year." />
 <a href="https://github.com/OtoYuki/nf-audit"><img src="assets/card-nf-audit.svg" width="49%" alt="nf-audit: allocated cost per nf-core/rnaseq test run across 30 releases; 62–68% never used in 28 of them." /></a>
